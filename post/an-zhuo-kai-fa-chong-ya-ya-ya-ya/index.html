@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>安卓开发冲鸭鸭鸭鸭 | 小景加载中...</title>
-<link rel="shortcut icon" href="https://Little-JIng.github.io/favicon.ico?v=1595950877967">
+<link rel="shortcut icon" href="https://Little-JIng.github.io/favicon.ico?v=1596084604011">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://Little-JIng.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="安卓开发冲鸭鸭鸭鸭 | 小景加载中... - Atom Feed" href="https://Little-JIng.github.io/atom.xml">
@@ -11,8 +11,11 @@
 
 
 
-    <meta name="description" content="那就加油吧！
-" />
+    <meta name="description" content="
+乐观锁
+在操作时很乐观，认为操作不会产生并发问题(不会有其他线程对数据进行修改)，因此不会上锁。但是在更新时会判断其他线程在这之前有没有对数据进行修改，一般会使用版本号机制或CAS(compare and swap)算法实现。
+
+1.1 ..." />
     <meta name="keywords" content="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -22,7 +25,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://Little-JIng.github.io">
-  <img class="avatar" src="https://Little-JIng.github.io/images/avatar.png?v=1595950877967" alt="">
+  <img class="avatar" src="https://Little-JIng.github.io/images/avatar.png?v=1596084604011" alt="">
   </a>
   <h1 class="site-title">
     小景加载中...
@@ -82,14 +85,180 @@
                 2020-07-29
               </span>
               <span>
-                1 min read
+                12 min read
               </span>
               
             </div>
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <p>那就加油吧！</p>
+                <ol>
+<li>乐观锁<br>
+在操作时很乐观，认为操作不会产生并发问题(不会有其他线程对数据进行修改)，因此不会上锁。但是在更新时会判断其他线程在这之前有没有对数据进行修改，一般会使用版本号机制或CAS(compare and swap)算法实现。</li>
+</ol>
+<p>1.1 版本号机制<br>
+取出记录时，获取当前version<br>
+更新时，带上这个version<br>
+执行更新时， set version = newVersion where version = oldVersion<br>
+如果version不对，就更新失败<br>
+核心SQL：<br>
+update table set name = 'Aron', version = version + 1 where id = #{id} and version = #{version};</p>
+<p>1.2 CAS算法<br>
+——乐观锁的另一种技术技术，当多个线程尝试使用CAS同时更新同一个变量时，只有其中一个线程能更新变量的值，而其它线程都失败，失败的线程并不会被挂起，而是被告知这次竞争中失败，并可以再次尝试。<br>
+CAS 操作中包含三个操作数 :<br>
+需要读写的内存位置V<br>
+进行比较的预期原值A<br>
+拟写入的新值B</p>
+<p>——java-concurrent包的实现：<br>
+A线程 写/用cas更新 volatile变量，B线程 读/ 用cas更新 volaitle变量；</p>
+<p>——缺点：<br>
+ABA<br>
+循环时间长，开销大<br>
+只能保证一个共享变量的原子操作</p>
+<ol start="2">
+<li>悲观锁<br>
+总是假设最坏的情况，每次取数据时都认为其他线程会修改，所以都会加（悲观）锁。一旦加锁，不同线程同时执行时,只能有一个线程执行，其他的线程在入口处等待，直到锁被释放。</li>
+</ol>
+<p>MySQL的读锁、写锁、行锁等<br>
+Java的synchronized关键字</p>
+<ol start="3">
+<li>死锁<br>
+产生死锁的原因：<br>
+——系统资源不足<br>
+——资源分配不当<br>
+——进程推进顺序的不合理</li>
+</ol>
+<p>产生死锁的四个必要条件：<br>
+——互斥条件：一个资源每次只能被一个进程使用。　（资源本身的特点，不可避免）<br>
+——请求与保持条件：一个进程因请求资源而等待时，不会释放已分配的资源。<br>
+——不剥夺条件：进程已获得的资源，在未使用之前，不能被强行剥夺。<br>
+——循环等待条件：若干个进程之间形成头尾相连的循环等待资源的关系。</p>
+<p>死锁解除：<br>
+——剥夺资源<br>
+——撤销进程</p>
+<p>死锁预防和死锁避免嗾使以牺牲系统效率和浪费资源为代价的，这与操作系统的设计目标相违背。而死锁检测策略则完全相反，它不采取任何限制错误来保证系统不进入死锁状态，即允许死锁发生，但操作系统不断地监督进程的进程路径，判断死锁是否真的发生，一旦死锁发生，则采取专门的措施解除死锁，并以最小代价使得整个系统恢复正常。</p>
+<ol start="4">
+<li>
+<p>Java8的HashMap详解（存储结构，功能实现，扩容优化，线程安全，遍历方法）<br>
+从结构实现来讲，HashMap是数组+链表+红黑树</p>
+</li>
+<li>
+<p>排序算法</p>
+</li>
+</ol>
+<p>一. 冒泡排序(BubbleSort)<br>
+基本思想：两个数比较大小，较大的数下沉，较小的数冒起来。<br>
+过程：<br>
+比较相邻的两个数据，如果第二个数小，就交换位置。<br>
+从后向前两两比较，一直到比较最前两个数据。最终最小数被交换到起始的位置，这样第一个最小数的位置就排好了。<br>
+继续重复上述过程，依次将第2.3...n-1个最小数排好位置。</p>
+<p>二. 选择排序(SelctionSort)<br>
+基本思想：<br>
+在长度为N的无序数组中，第一次遍历n-1个数，找到最小的数值与第一个元素交换；<br>
+第二次遍历n-2个数，找到最小的数值与第二个元素交换；<br>
+。。。<br>
+第n-1次遍历，找到最小的数值与第n-1个元素交换，排序完成。</p>
+<p>三. 插入排序(Insertion Sort)<br>
+基本思想：<br>
+在要排序的一组数中，假定前n-1个数已经排好序，现在将第n个数插到前面的有序数列中，使得这n个数也是排好顺序的。如此反复循环，直到全部排好顺序。</p>
+<p>四. 希尔排序(Shell Sort)<br>
+前言：<br>
+数据序列1： 13-17-20-42-28 利用插入排序，13-17-20-28-42. Number of swap:1;<br>
+数据序列2： 13-17-20-42-14 利用插入排序，13-14-17-20-42. Number of swap:3;<br>
+如果数据序列基本有序，使用插入排序会更加高效。<br>
+基本思想：<br>
+在要排序的一组数中，根据某一增量分为若干子序列，并对子序列分别进行插入排序。<br>
+然后逐渐将增量减小,并重复上述过程。直至增量为1,此时数据序列基本有序,最后进行插入排序。</p>
+<p>五. 快速排序(Quicksort)<br>
+基本思想：（分治）<br>
+先从数列中取出一个数作为key值；<br>
+将比这个数小的数全部放在它的左边，大于或等于它的数全部放在它的右边；<br>
+对左右两个小数列重复第二步，直至各区间只有1个数。</p>
+<p>六. 归并排序(Merge Sort)<br>
+基本思想：参考<br>
+归并排序是建立在归并操作上的一种有效的排序算法。该算法是采用分治法的一个非常典型的应用。<br>
+首先考虑下如何将2个有序数列合并。这个非常简单，只要从比较2个数列的第一个数，谁小就先取谁，取了后就在对应数列中删除这个数。然后再进行比较，如果有数列为空，那直接将另一个数列的数据依次取出即可。</p>
+<ol start="6">
+<li>
+<p>用两个栈实现队列<br>
+import java.util.Stack;<br>
+public class Solution {<br>
+Stack<Integer> stack1 = new Stack<Integer>();<br>
+Stack<Integer> stack2 = new Stack<Integer>();<br>
+public void push(int node) {<br>
+stack1.push(node);<br>
+}<br>
+public int pop() {<br>
+if(stack1.empty()&amp;&amp;stack2.empty()){<br>
+throw new RuntimeException(&quot;Queue is empty!&quot;);<br>
+}<br>
+if(stack2.empty()){<br>
+while(!stack1.empty()){<br>
+stack2.push(stack1.pop());<br>
+}<br>
+}<br>
+return stack2.pop();<br>
+}<br>
+}</p>
+</li>
+<li>
+<p>synchronized与Lock的区别<br>
+<img src="https://Little-JIng.github.io/post-images/1596079982617.jpg" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>抽象的(abstract)方法不能同时是静态的(static), 不能是本地方法(native)，不能同时被synchronized。<br>
+抽象方法需要子类重写，而静态的方法是无法被重写的，因此二者是矛盾的。<br>
+本地方法是由本地代码（如C 代码）实现的方法，而抽象方法是没有实现的，也是矛盾的。<br>
+synchronized 和方法的实现细节有关，抽象方法不涉及实现细节，因此也是相互矛盾的。</p>
+</li>
+<li>
+<p>面向对象的特性<br>
+1）继承：继承是从已有类得到继承信息创建新类的过程。提供继承信息的类被称为父类（超类、基类）；得到继承信息的类被称为子类（派生类）。继承让变化中的软件系统有了一定的延续性，同时继承也是封装程序中可变因素的重要手段。<br>
+2） 封装：通常认为封装是把数据和操作数据的方法绑定起来，对数据的访问只能通过已定义的接口。面向对象的本质就是将现实世界描绘成一系列完全自治、封闭的对象。我们在类中编写的方法就是对实现细节的一种封装；我们编写一个类就是对数据和数据操作的封装。可以说，封装就是隐藏一切可隐藏的东西，只向外界提供最简单的编程接口。<br>
+3） 多态性：多态性是指允许不同子类型的对象对同一消息作出不同的响应。简单的说就是用同样的对象引用调用同样的方法但是做了不同的事情。<br>
+多态性分为编译时的多态性和运行时的多态性。如果将对象的方法视为对象向外界提供的服务，那么运行时的多态性可以解释为：当A系统访问B系统提供的服务时，B系统有多种提供服务的方式，但一切对 A 系统来说都是透明的。方法重载（overload）实现的是编译时的多态性（也称为前绑定），而方法重写（override）实现的是运行时的多态性（也称为后绑定）。<br>
+运行时的多态是面向对象最精髓的东西，要实现多态需要做两件事：<br>
+方法重写（子类继承父类并重写父类中已有的或抽象的方法）；<br>
+对象造型（用父类型引用引用子类型对象，这样同样的引用调用同样的方法就会根据子类对象的不同而表现出不同的行为）。<br>
+4）抽象：抽象是将一类对象的共同特征总结出来构造类的过程，包括数据抽象和行为抽象两方面。抽象只关注对象有哪些属性和行为，并不关注这些行为的细节是什么。<br>
+注意：默认情况下面向对象有3大特性，封装、继承、多态，如果面试官问让说出4大特性，那么我们就把抽象加上去。</p>
+</li>
+<li>
+<p>进程和线程<br>
+进程（process）是一块包含了某些资源的内存区域。操作系统利用进程把它的工作划分为一些功能单元。<br>
+进程中所包含的一个或多个执行单元称为线程（thread）。进程还拥有一个私有的虚拟地址空间，该空间仅能被它所包含的线程访问。</p>
+</li>
+<li>
+<p>MySQL事务<br>
+数据库事务指的是一组数据操作，事务内的操作要么就是全部成功，要么就是全部失败，什么都不做，其实不是没做，是可能做了一部分但是只要有一步失败，就要回滚所有操作。<br>
+MySQL 的 InnoDB 引擎才支持事务，其中可重复读是默认的隔离级别。<br>
+读未提交和串行化基本上是不需要考虑的隔离级别，前者不加锁限制，后者相当于单线程执行，效率太差。<br>
+读提交解决了脏读问题，行锁解决了并发更新的问题。并且 MySQL 在可重复读级别解决了幻读问题，是通过行锁和间隙锁的组合 Next-Key 锁实现的。</p>
+</li>
+</ol>
+<p>MySQL有三种锁的级别：页级、表级、行级。<br>
+表级锁：开销小，加锁快；不会出现死锁；锁定粒度大，发生锁冲突的概率最高,并发度最低。<br>
+行级锁：开销大，加锁慢；会出现死锁；锁定粒度最小，发生锁冲突的概率最低,并发度也最高。<br>
+页面锁：开销和加锁时间界于表锁和行锁之间；会出现死锁；锁定粒度界于表锁和行锁之间，并发度一般。</p>
+<p>死锁是指两个或两个以上的进程在执行过程中, 因争夺资源而造成的一种互相等待的现象,若无外力作用,它们都将无法推进下去。</p>
+<p>解死锁：<br>
+——开启锁监控：在遇到线上死锁问题时，我们应该第一时间获取相关的死锁日志。我们可以通过 show engine innodb status 命令来获取死锁信息，但是它有个限制，只能拿到最近一次的死锁日志。<br>
+——追本溯源，找到对应的应用代码。</p>
+<ol start="11">
+<li>
+<p>JAVA垃圾回收<br>
+垃圾回收(Garbage Collection)是Java虚拟机(JVM)垃圾回收器提供的一种用于在空闲时间不定时回收无任何对象引用的对象占据的内存空间的一种机制。<br>
+注意：垃圾回收回收的是无任何引用的对象占据的内存空间而不是对象本身。换言之，垃圾回收只会负责释放那些对象占有的内存。对象是个抽象的词，包括引用和其占据的内存空间。当对象没有任何引用时其占据的内存空间随即被收回备用，此时对象也就被销毁。但不能说是回收对象，可以理解为一种文字游戏。<br>
+——引用：如果Reference类型的数据中存储的数值代表的是另外一块内存的起始地址，就称这块内存代表着一个引用。<br>
+——垃圾：无任何对象引用的对象。<br>
+——回收：清理“垃圾”占用的内存空间而非对象本身。<br>
+——发生地点：一般发生在堆内存中，因为大部分的对象都储存在堆内存中。<br>
+——发生时间：程序空闲时间不定时回收。</p>
+</li>
+<li>
+<p>Java中Wait、Sleep和Yield方法的区别</p>
+</li>
+</ol>
 
               </div>
               <div class="toc-container">
@@ -102,9 +271,9 @@
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="https://Little-JIng.github.io/post/hello-gridea/">
+            <a href="https://Little-JIng.github.io/post/chan-pin-jing-li-zhen-de-hen-nan-dang-ye/">
               <h3 class="post-title">
-                啊是数据统计分析呢！
+                产品经理真的很难当耶
               </h3>
             </a>
           </div>
