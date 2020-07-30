@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Little-JIng.github.io</id>
     <title>小景加载中...</title>
-    <updated>2020-07-30T04:50:51.363Z</updated>
+    <updated>2020-07-30T04:55:04.176Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Little-JIng.github.io"/>
     <link rel="self" href="https://Little-JIng.github.io/atom.xml"/>
@@ -40,7 +40,7 @@ Prefer standard forms demonstrated to be effective (类别比较p78)</li>
         <id>https://Little-JIng.github.io/post/an-zhuo-kai-fa-chong-ya-ya-ya-ya/</id>
         <link href="https://Little-JIng.github.io/post/an-zhuo-kai-fa-chong-ya-ya-ya-ya/">
         </link>
-        <updated>2020-07-28T17:12:58.000Z</updated>
+        <updated>2020-07-28T19:12:58.000Z</updated>
         <content type="html"><![CDATA[<ol>
 <li>乐观锁<br>
 在操作时很乐观，认为操作不会产生并发问题(不会有其他线程对数据进行修改)，因此不会上锁。但是在更新时会判断其他线程在这之前有没有对数据进行修改，一般会使用版本号机制或CAS(compare and swap)算法实现。</li>
@@ -205,7 +205,8 @@ MySQL 的 InnoDB 引擎才支持事务，其中可重复读是默认的隔离级
 ——发生时间：程序空闲时间不定时回收。</p>
 </li>
 <li>
-<p>Java中Wait、Sleep和Yield方法的区别</p>
+<p>Java中Wait、Sleep方法的区别<br>
+wait()和sleep()的关键的区别在于，wait()是用于线程间通信的，而sleep()是用于短时间暂停当前线程。更加明显的一个区别在于，当一个线程调用wait()方法的时候，会释放它锁持有的对象的管程和锁，但是调用sleep()方法的时候，不会释放他所持有的管程。</p>
 </li>
 </ol>
 ]]></content>
@@ -235,15 +236,6 @@ MySQL 的 InnoDB 引擎才支持事务，其中可重复读是默认的隔离级
         </link>
         <updated>2020-07-28T15:13:51.000Z</updated>
         <content type="html"><![CDATA[<p>啊好难</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[啊是数据统计分析呢！]]></title>
-        <id>https://Little-JIng.github.io/post/hello-gridea/</id>
-        <link href="https://Little-JIng.github.io/post/hello-gridea/">
-        </link>
-        <updated>2018-12-11T22:00:00.000Z</updated>
-        <content type="html"><![CDATA[<p>MySQL</p>
 ]]></content>
     </entry>
 </feed>
