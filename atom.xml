@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Little-JIng.github.io</id>
     <title>小景加载中...</title>
-    <updated>2020-07-30T04:55:04.176Z</updated>
+    <updated>2020-07-30T09:01:07.020Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Little-JIng.github.io"/>
     <link rel="self" href="https://Little-JIng.github.io/atom.xml"/>
@@ -40,7 +40,7 @@ Prefer standard forms demonstrated to be effective (类别比较p78)</li>
         <id>https://Little-JIng.github.io/post/an-zhuo-kai-fa-chong-ya-ya-ya-ya/</id>
         <link href="https://Little-JIng.github.io/post/an-zhuo-kai-fa-chong-ya-ya-ya-ya/">
         </link>
-        <updated>2020-07-28T19:12:58.000Z</updated>
+        <updated>2020-07-28T21:12:58.000Z</updated>
         <content type="html"><![CDATA[<ol>
 <li>乐观锁<br>
 在操作时很乐观，认为操作不会产生并发问题(不会有其他线程对数据进行修改)，因此不会上锁。但是在更新时会判断其他线程在这之前有没有对数据进行修改，一般会使用版本号机制或CAS(compare and swap)算法实现。</li>
@@ -179,12 +179,13 @@ synchronized 和方法的实现细节有关，抽象方法不涉及实现细节�
 </li>
 <li>
 <p>MySQL事务<br>
-数据库事务指的是一组数据操作，事务内的操作要么就是全部成功，要么就是全部失败，什么都不做，其实不是没做，是可能做了一部分但是只要有一步失败，就要回滚所有操作。<br>
+事务具有四个特征：原子性（ Atomicity ）、一致性（ Consistency ）、隔离性（ Isolation ）和持久性（ Durability ）</p>
+</li>
+</ol>
+<p>数据库事务指的是一组数据操作，事务内的操作要么就是全部成功，要么就是全部失败，什么都不做，其实不是没做，是可能做了一部分但是只要有一步失败，就要回滚所有操作。<br>
 MySQL 的 InnoDB 引擎才支持事务，其中可重复读是默认的隔离级别。<br>
 读未提交和串行化基本上是不需要考虑的隔离级别，前者不加锁限制，后者相当于单线程执行，效率太差。<br>
 读提交解决了脏读问题，行锁解决了并发更新的问题。并且 MySQL 在可重复读级别解决了幻读问题，是通过行锁和间隙锁的组合 Next-Key 锁实现的。</p>
-</li>
-</ol>
 <p>MySQL有三种锁的级别：页级、表级、行级。<br>
 表级锁：开销小，加锁快；不会出现死锁；锁定粒度大，发生锁冲突的概率最高,并发度最低。<br>
 行级锁：开销大，加锁慢；会出现死锁；锁定粒度最小，发生锁冲突的概率最低,并发度也最高。<br>
@@ -193,7 +194,7 @@ MySQL 的 InnoDB 引擎才支持事务，其中可重复读是默认的隔离级
 <p>解死锁：<br>
 ——开启锁监控：在遇到线上死锁问题时，我们应该第一时间获取相关的死锁日志。我们可以通过 show engine innodb status 命令来获取死锁信息，但是它有个限制，只能拿到最近一次的死锁日志。<br>
 ——追本溯源，找到对应的应用代码。</p>
-<ol start="11">
+<ol>
 <li>
 <p>JAVA垃圾回收<br>
 垃圾回收(Garbage Collection)是Java虚拟机(JVM)垃圾回收器提供的一种用于在空闲时间不定时回收无任何对象引用的对象占据的内存空间的一种机制。<br>
@@ -208,7 +209,111 @@ MySQL 的 InnoDB 引擎才支持事务，其中可重复读是默认的隔离级
 <p>Java中Wait、Sleep方法的区别<br>
 wait()和sleep()的关键的区别在于，wait()是用于线程间通信的，而sleep()是用于短时间暂停当前线程。更加明显的一个区别在于，当一个线程调用wait()方法的时候，会释放它锁持有的对象的管程和锁，但是调用sleep()方法的时候，不会释放他所持有的管程。</p>
 </li>
+<li>
+<p>TCP三次握手/四次挥手<br>
+为了实现可靠数据传输， TCP 协议的通信双方， 都必须维护一个序列号， 以标识发送出去的数据包中， 哪些是已经被对方收到的。 三次握手的过程即是通信双方相互告知序列号起始值， 并确认对方已经收到了序列号起始值的必经步骤。<br>
+如果只是两次握手， 至多只有连接发起方的起始序列号能被确认， 另一方选择的序列号则得不到确认。</p>
+</li>
 </ol>
+<p>TCP是全双工模式，这就意味着，当主机1发出FIN报文段时，只是表示主机1已经没有数据要发送了，主机1告诉主机2，它的数据已经全部发送完毕了；但是，这个时候主机1还是可以接受来自主机2的数据；当主机2返回ACK报文段时，表示它已经知道主机1没有数据发送了，但是主机2还是可以发送数据到主机1的；当主机2也发送了FIN报文段时，这个时候就表示主机2也没有数据要发送了，就会告诉主机1，我也没有数据要发送，之后就会中断这次TCP连接。</p>
+<ol start="14">
+<li>
+<p>String<br>
+——java运行环境有一个字符串池，由String类维护。<br>
+执行语句String str=&quot;abc&quot;时：首先查看字符串池中是否存在字符串&quot;abc&quot;,如果存在则直接将“abc”赋给str,如果不存在则先在 字符串池中新建一个字符串&quot;abc&quot;，然后再将其赋给str.<br>
+——执行语句String str = new String(&quot;abc&quot;);时。不管字符串池中是否存在字符串“abc”,直接新建一个字符串“abc”(注意新建的字符串“abc”不是在字符串池中，而是在堆中)，然后将其赋给str。这种效率低于使用字符串池的方式。</p>
+</li>
+<li>
+<p>String,StringBuffer与StringBuilder的区别<br>
+String 类型和 StringBuffer 类型的主要性能区别其实在于 String 是不可变的对象, 因此在每次对 String 类型进行改变的时候其实都等同于生成了一个新的 String 对象，然后将指针指向新的 String 对象，所以经常改变内容的字符串最好不要用 String ，因为每次生成对象都会对系统性能产生影响，特别当内存中无引用对象多了以后， JVM 的 GC 就会开始工作，那速度是一定会相当慢的。<br>
+而如果是使用 StringBuffer 类则结果就不一样了，每次结果都会对 StringBuffer 对象本身进行操作，而不是生成新的对象，再改变对象引用。所以在一般情况下我们推荐使用 StringBuffer ，特别是字符串对象经常改变的情况下。而在某些特别情况下， String 对象的字符串拼接其实是被 JVM 解释成了 StringBuffer 对象的拼接，所以这些时候 String 对象的速度并不会比 StringBuffer 对象慢。<br>
+StringBuffer 字符串变量（线程安全）<br>
+StringBuilder 字符串变量（非线程安全）</p>
+</li>
+<li>
+<p>TreadLocal<br>
+ThreadLocal 提供了线程本地变量，它可以保证访问到的变量属于当前线程，每个线程都保存有一个变量副本，每个线程的变量都不同，而同一个线程在任何时候访问这个本地变量的结果都是一致的。当此线程结束生命周期时，所有的线程本地实例都会被 GC。ThreadLocal 相当于提供了一种线程隔离，将变量与线程相绑定。ThreadLocal 通常定义为 private static 类型。ThreadLocal 通过 threadLocalHashCode 来标识每一个 ThreadLocal 的唯一性。threadLocalHashCode 通过 CAS 操作进行更新。</p>
+</li>
+<li>
+<p>OSI（7层）&amp; TCP/IP（5层）<br>
+——OSI七层模型<br>
+OSI中的层 功能 TCP/IP协议族<br>
+应用层 文件传输，电子邮件，文件服务，虚拟终端 TFTP，HTTP，SNMP，FTP，SMTP，DNS，Telnet<br>
+表示层 数据格式化，代码转换，数据加密 没有协议<br>
+会话层 解除或建立与别的接点的联系 没有协议<br>
+传输层 提供端对端的接口 TCP，UDP<br>
+网络层 为数据包选择路由 IP，ICMP，RIP，OSPF，BGP，IGMP<br>
+数据链路层 传输有地址的帧以及错误检测功能 SLIP，CSLIP，PPP，ARP，RARP，MTU<br>
+物理层 以二进制数据形式在物理媒体上传输数据 ISO2110，IEEE802，IEEE802.2<br>
+——TCP/IP五层模型的协议<br>
+应用层<br>
+传输层<br>
+网络层<br>
+数据链路层<br>
+物理层</p>
+</li>
+<li>
+<p>8 种常用数据结构</p>
+</li>
+</ol>
+<p>——数组<br>
+索引(index)<br>
+——栈<br>
+栈中的元素采用 LIFO (Last In First Out)，即后进先出。<br>
+栈的基本操作<br>
+Push —  在栈的最上方插入元素<br>
+Pop — 返回栈最上方的元素，并将其删除<br>
+isEmpty —  查询栈是否为空<br>
+Top —  返回栈最上方的元素，并不删除</p>
+<p>——队列<br>
+队列(Queue)与栈类似，都是采用线性结构存储数据。它们的区别在于，栈采用 LIFO 方式，而队列采用先进先出，即FIFO(First in First Out)。<br>
+Enqueue —  在队列末尾插入元素<br>
+Dequeue —  将队列第一个元素删除<br>
+isEmpty —  查询队列是否为空<br>
+Top —  返回队列的第一个元素</p>
+<p>——链表<br>
+链表分为 2 种：单向链表，双向链表<br>
+链表的基本操作：<br>
+InsertAtEnd —  在链表结尾插入元素<br>
+InsertAtHead —  在链表开头插入元素<br>
+Delete —  删除链表的指定元素<br>
+DeleteAtHead —  删除链表第一个元素<br>
+Search —  在链表中查询指定元素<br>
+isEmpty —  查询链表是否为空</p>
+<p>——图<br>
+图(graph)由多个节点(vertex)构成，节点之间阔以互相连接组成一个网络。(x, y)表示一条边(edge)，它表示节点 x 与 y 相连。边可能会有权值(weight/cost)。<br>
+图分为两种: 无向图； 有向图<br>
+在编程语言中，图有可能有以下两种形式表示：<br>
+邻接矩阵(Adjacency Matrix)<br>
+邻接表(Adjacency List)</p>
+<p>遍历图有两种算法：<br>
+广度优先搜索(Breadth First Search)<br>
+-首先将根节点放入队列中。<br>
+-从队列中取出第一个节点，并检验它是否为目标。如果找到目标，则结束搜寻并回传结果。否则将它所有尚未检验过的直接子节点加入队列中。<br>
+-若队列为空，表示整张图都检查过了——亦即图中没有欲搜寻的目标。结束搜寻并回传“找不到目标”。<br>
+-重复步骤2。<br>
+深度优先搜索(Depth First Search)<br>
+-访问顶点v；<br>
+-依次从v的未被访问的邻接点出发，对图进行深度优先遍历；直至图中和v有路径相通的顶点都被访问；<br>
+-若此时图中尚有顶点未被访问，则从一个未被访问的顶点出发，重新进行深度优先遍历，直到图中所有顶点均被访问过为止。</p>
+<p>——树<br>
+树有很多分类：<br>
+N 叉树(N-ary Tree)<br>
+平衡树(Balanced Tree)<br>
+二叉树(Binary Tree)<br>
+二叉查找树(Binary Search Tree)<br>
+平衡二叉树(AVL Tree)<br>
+红黑树(Red Black Tree)<br>
+2-3 树(2–3 Tree)</p>
+<p>——前缀树<br>
+——哈希表<br>
+哈希(Hash)将某个对象变换为唯一标识符，该标识符通常用一个短的随机字母和数字组成的字符串来代表。哈希可以用来实现各种数据结构，其中最常用的就是哈希表(hash table)。<br>
+哈希表通常由数组实现。<br>
+哈希表的性能取决于 3 个指标：<br>
+哈希函数<br>
+哈希表的大小<br>
+哈希冲突处理方式<br>
+数组实现的哈希表，数组的下标即为哈希值，由哈希函数计算，作为哈希表的键(key)，而数组中保存的数据即为值(value)。</p>
 ]]></content>
     </entry>
     <entry>
